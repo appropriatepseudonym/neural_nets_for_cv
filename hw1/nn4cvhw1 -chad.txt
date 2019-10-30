@@ -1,0 +1,41 @@
+import os, glob, random , os.path , scipy
+import cv2
+from pathlib import Path
+import numpy as np
+from sklearn.model_selection import train_test_split
+
+# ulpath = "exampleshq/"
+# filename = "path_to_image"
+# dir_path = os.path.dirname(os.path.realpath(__file__))
+# train_path = os.path.join(dir_path , 'train')
+# test_path = os.path.join(dir_path , 'test')
+# val_path = os.path.join(dir_path , 'val')
+# os.chdir(dir_path)
+os.chdir("/Users/chad/Downloads/animals")
+
+image_path_list=[]
+#image_path_list = list(os.listdir("/Users/chad/Downloads/animals") if not f.startswith('.'))
+image_path_list = glob.glob("*")
+#img_dir = ""  # Enter Directory of all images
+#data_path = os.path.join(img_dir, '*g')
+#files = glob.glob(data_path)
+data = []
+names = []
+label = []
+
+for dir in image_path_list:
+    os.chdir("/Users/chad/Downloads/animals/" + dir)
+    files = glob.glob("*")
+    for filename in files:
+        oriimage = cv2.imread(filename)
+        newimage = cv2.resize(oriimage, (32, 32), interpolation=cv2.INTER_CUBIC)
+        data.append(newimage.reshape(-1))
+        names.append(dir)
+
+(pretrainX, testX, pretrainY, testY) = train_test_split(data, names, test_size=.20, random_state=0)
+( trainX, valX ,trainY, valY) = train_test_split(pretrainX, pretrainY, test_size=.1, random_state=0)
+
+
+
+
+#classification_report(testY, preds)
